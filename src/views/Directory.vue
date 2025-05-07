@@ -7,6 +7,7 @@ const profiles = ref([])
 const loading = ref(true)
 const error = ref(null)
 const searchQuery = ref('')
+const activeLetter = ref(null)
 const router = useRouter()
 
 onMounted(async () => {
@@ -32,13 +33,18 @@ onMounted(async () => {
 
 const filteredProfiles = computed(() => {
   const q = searchQuery.value.toLowerCase()
-  return profiles.value.filter((p) =>
-    p.full_name?.toLowerCase().includes(q) ||
-    p.title?.toLowerCase().includes(q) ||
-    p.institution?.toLowerCase().includes(q) ||
-    p.email?.toLowerCase().includes(q) ||
-    p.phone?.toLowerCase().includes(q)
-  )
+  return profiles.value.filter((p) => {
+    const matchesSearch =
+      p.full_name?.toLowerCase().includes(q) ||
+      p.title?.toLowerCase().includes(q) ||
+      p.institution?.toLowerCase().includes(q) ||
+      p.email?.toLowerCase().includes(q) ||
+      p.phone?.toLowerCase().includes(q)
+    const matchesLetter = activeLetter.value
+      ? p.full_name?.toLowerCase().startsWith(activeLetter.value.toLowerCase())
+      : true
+    return matchesSearch && matchesLetter
+  })
 })
 </script>
 
@@ -46,13 +52,24 @@ const filteredProfiles = computed(() => {
   <div class="max-w-7xl mx-auto mt-10 p-4">
     <h2 class="text-2xl font-semibold mb-6">Directory</h2>
 
+    <div class="flex flex-wrap gap-1 mb-2">
+      <button
+        v-for="letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')"
+        :key="letter"
+        @click="activeLetter = activeLetter === letter ? null : letter"
+        :class="[
+          'px-2 py-1 text-sm rounded border',
+          activeLetter === letter ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'
+        ]"
+      >{{ letter }}</button>
+    </div>
+
     <input
       v-model="searchQuery"
       type="text"
       placeholder="Search by name, title, institution, email, or phone"
       class="mb-2 w-full p-2 border border-gray-300 rounded"
     />
-
     <p class="text-sm text-gray-600 mb-4">
       Showing {{ filteredProfiles.length }} {{ filteredProfiles.length === 1 ? 'profile' : 'profiles' }}
     </p>
