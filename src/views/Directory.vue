@@ -50,8 +50,12 @@ const filteredProfiles = computed(() => {
       v-model="searchQuery"
       type="text"
       placeholder="Search by name, title, institution, email, or phone"
-      class="mb-6 w-full p-2 border border-gray-300 rounded"
+      class="mb-2 w-full p-2 border border-gray-300 rounded"
     />
+
+    <p class="text-sm text-gray-600 mb-4">
+      Showing {{ filteredProfiles.length }} {{ filteredProfiles.length === 1 ? 'profile' : 'profiles' }}
+    </p>
 
     <div v-if="loading" class="text-gray-500">Loading profiles...</div>
     <div v-else-if="error" class="text-red-500">{{ error }}</div>
