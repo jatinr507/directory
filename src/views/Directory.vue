@@ -80,8 +80,8 @@ const filteredProfiles = computed(() => {
       <div
         v-for="profile in filteredProfiles"
         :key="profile.id"
-        class="bg-white border rounded-lg p-4 shadow hover:shadow-md transition"
-      >
+        @click="router.push(`/profiles/${profile.id}`)"
+        class="cursor-pointer bg-white border rounded-lg p-4 shadow hover:shadow-md transition">
         <img
           :src="profile.profile_photo_url || 'https://placehold.co/100x100?text=👤'"
           alt="Profile"
