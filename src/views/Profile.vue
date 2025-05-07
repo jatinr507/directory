@@ -66,7 +66,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { supabase } from '../lib/supabase'
 import { uploadProfileImage } from '../lib/upload_image'
 
@@ -79,6 +79,8 @@ const newPassword = ref('')
 const passwordMessage = ref('')
 const formattedUpdatedAt = ref('')
 const route = useRoute()
+const router = useRouter()
+
 
 const loadProfile = async () => {
   let targetUserId = route.params.id || null
@@ -86,8 +88,7 @@ const loadProfile = async () => {
   if (!targetUserId) {
     const { data: { user }, error } = await supabase.auth.getUser()
     if (error || !user) {
-      message.value = 'Could not load user session.'
-      loading.value = false
+      router.push('/login')  // ✅ Redirects unauthorized users
       return
     }
     targetUserId = user.id
@@ -113,6 +114,7 @@ const loadProfile = async () => {
 
   loading.value = false
 }
+
 
 const handlePhotoChange = (e) => {
   const file = e.target.files[0]

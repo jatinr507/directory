@@ -4,7 +4,7 @@ export const uploadProfileImage = async (file, userId) => {
   if (!file || !userId) throw new Error('Missing file or user ID.')
 
   const fileExt = file.name.split('.').pop() || 'jpg'
-  const filePath = `avatars/${userId}.${fileExt}`
+  const filePath = `avatars/${userId}/${Date.now()}.${fileExt}`
 
   console.log('Uploading:', file.name, '→', filePath)
 
@@ -12,6 +12,7 @@ export const uploadProfileImage = async (file, userId) => {
     .from('profile-photos')
     .upload(filePath, file, {
       cacheControl: '3600',
+      upsert: true
     })
 
   if (uploadError) throw uploadError
