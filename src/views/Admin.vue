@@ -127,13 +127,13 @@ const fetchProfiles = async () => {
     .from('profiles')
     .select('*')
     .eq('status', 'pending')
-  pendingProfiles.value = pending || []
+  pendingProfiles.value = (pending || []).sort((a, b) => a.full_name.localeCompare(b.full_name))
 
   const { data: rejected } = await supabase
     .from('profiles')
     .select('*')
     .eq('status', 'rejected')
-  rejectedProfiles.value = rejected || []
+  rejectedProfiles.value = (rejected || []).sort((a, b) => a.full_name.localeCompare(b.full_name))
 
   loading.value = false
 }
