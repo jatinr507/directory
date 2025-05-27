@@ -50,7 +50,7 @@ const filteredProfiles = computed(() => {
 
 <template>
   <div class="max-w-7xl mx-auto mt-10 p-4">
-    <h2 class="text-2xl font-semibold mb-6">Directory</h2>
+    <h2 class="text-2xl font-semibold mb-6">Main Directory</h2>
 
     <div class="flex flex-wrap gap-1 mb-2">
       <button
