@@ -162,7 +162,6 @@
                       v-model="form.addressLine1"
                       type="text"
                       class="w-full p-2 bg-white border-b border-gray-300 focus:outline-none focus:border-[#2E4172]"
-                      placeholder="Enter"
                     />
                   </div>
 
@@ -172,7 +171,6 @@
                       v-model="form.addressLine2"
                       type="text"
                       class="w-full p-2 bg-white border-b border-gray-300 focus:outline-none focus:border-[#2E4172]"
-                      placeholder="Enter"
                     />
                   </div>
 
@@ -182,7 +180,6 @@
                       v-model="form.city"
                       type="text"
                       class="w-full p-2 bg-white border-b border-gray-300 focus:outline-none focus:border-[#2E4172]"
-                      placeholder="Enter"
                     />
                   </div>
 
@@ -192,7 +189,6 @@
                       v-model="form.state"
                       type="text"
                       class="w-full p-2 bg-white border-b border-gray-300 focus:outline-none focus:border-[#2E4172]"
-                      placeholder="Enter"
                     />
                   </div>
 
@@ -202,7 +198,6 @@
                       v-model="form.zipCode"
                       type="text"
                       class="w-full p-2 bg-white border-b border-gray-300 focus:outline-none focus:border-[#2E4172]"
-                      placeholder="Enter"
                     />
                   </div>
                 </div>
@@ -231,16 +226,55 @@
     <!-- Main Content Area -->
     <div class="ml-[280px] p-8">
       <h1 class="text-2xl font-bold text-[#2E4172] mb-6">Directory</h1>
-      <!-- Add your directory content here -->
+      
+      <!-- Profile Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div 
+          v-for="profile in filteredProfiles" 
+          :key="profile.id"
+          class="bg-white rounded-lg shadow-md p-6 border border-gray-200"
+        >
+          <div class="flex items-center space-x-4">
+            <img 
+              :src="profile.profile_photo_url || 'https://placehold.co/100x100?text=👤'" 
+              :alt="profile.full_name"
+              class="w-16 h-16 rounded-full object-cover"
+            />
+            <div>
+              <h3 class="font-semibold text-lg text-[#2E4172]">{{ profile.full_name }}</h3>
+              <p class="text-gray-600">{{ profile.title }}</p>
+              <p class="text-gray-500 text-sm">{{ profile.company }}</p>
+            </div>
+          </div>
+          
+          <div class="mt-4 space-y-2">
+            <p v-if="profile.email" class="text-sm">
+              <span class="material-icons text-gray-400 text-base align-middle mr-2">email</span>
+              <a :href="'mailto:' + profile.email" class="text-blue-600 hover:underline">{{ profile.email }}</a>
+            </p>
+            <p v-if="profile.phone" class="text-sm">
+              <span class="material-icons text-gray-400 text-base align-middle mr-2">phone</span>
+              {{ profile.phone }}
+            </p>
+            <p v-if="profile.linkedin" class="text-sm">
+              <span class="material-icons text-gray-400 text-base align-middle mr-2">link</span>
+              <a :href="profile.linkedin" target="_blank" class="text-blue-600 hover:underline">LinkedIn Profile</a>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { supabase } from '../lib/supabase'
 
 const showEditProfile = ref(false)
 const searchQuery = ref('')
+const profiles = ref([])
+const loading = ref(true)
 
 const form = ref({
   firstName: '',
@@ -259,8 +293,92 @@ const form = ref({
   zipCode: ''
 })
 
-const saveProfile = () => {
-  // Implement save profile logic here
-  showEditProfile.value = false
+const filteredProfiles = computed(() => {
+  if (!searchQuery.value) return profiles.value
+  
+  const query = searchQuery.value.toLowerCase()
+  return profiles.value.filter(profile => 
+    profile.full_name?.toLowerCase().includes(query) ||
+    profile.title?.toLowerCase().includes(query) ||
+    profile.company?.toLowerCase().includes(query) ||
+    profile.email?.toLowerCase().includes(query)
+  )
+})
+
+const fetchProfiles = async () => {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('status', 'approved')
+  
+  if (!error && data) {
+    profiles.value = data
+  }
+  loading.value = false
 }
+
+const loadUserProfile = async () => {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single()
+
+    if (profile) {
+      const names = profile.full_name.split(' ')
+      form.value = {
+        firstName: names[0],
+        lastName: names.slice(1).join(' '),
+        email: profile.email,
+        phone: profile.phone || '',
+        linkedin: profile.linkedin || '',
+        website: profile.website || '',
+        title: profile.title || '',
+        company: profile.company || '',
+        organization: profile.organization || '',
+        addressLine1: profile.address_line1 || '',
+        addressLine2: profile.address_line2 || '',
+        city: profile.city || '',
+        state: profile.state || '',
+        zipCode: profile.zip_code || ''
+      }
+    }
+  }
+}
+
+const saveProfile = async () => {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return
+
+  const { error } = await supabase
+    .from('profiles')
+    .update({
+      full_name: `${form.value.firstName} ${form.value.lastName}`,
+      email: form.value.email,
+      phone: form.value.phone,
+      linkedin: form.value.linkedin,
+      website: form.value.website,
+      title: form.value.title,
+      company: form.value.company,
+      organization: form.value.organization,
+      address_line1: form.value.addressLine1,
+      address_line2: form.value.addressLine2,
+      city: form.value.city,
+      state: form.value.state,
+      zip_code: form.value.zipCode
+    })
+    .eq('id', user.id)
+
+  if (!error) {
+    showEditProfile.value = false
+    await fetchProfiles()
+  }
+}
+
+onMounted(() => {
+  fetchProfiles()
+  loadUserProfile()
+})
 </script>
