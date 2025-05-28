@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-white">
     <!-- Fixed Header -->
-    <div class="fixed top-[76px] left-[280px] right-0 bg-white z-20">
+    <div class="fixed top-0 left-[280px] right-0 bg-white z-30">
       <!-- Main Header -->
       <div class="border-b px-8 py-6">
         <h1 class="text-2xl font-bold text-[#2E4172]">Directory</h1>
@@ -39,7 +39,7 @@
     </div>
 
     <!-- Left Sidebar -->
-    <div class="fixed left-0 top-[76px] w-[280px] h-[calc(100vh-76px)] bg-white border-r border-gray-200">
+    <div class="fixed left-0 top-0 w-[280px] h-screen bg-white border-r border-gray-200">
       <div class="h-full flex flex-col">
         <!-- Filter Section -->
         <div v-show="!showEditProfile" class="p-6">
@@ -259,7 +259,7 @@
     </div>
 
     <!-- Main Content Area -->
-    <div class="ml-[280px] pt-[180px] p-8">
+    <div class="ml-[280px] pt-[140px] p-8">
       <!-- Profile Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div 
