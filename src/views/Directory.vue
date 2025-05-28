@@ -1,45 +1,7 @@
 <template>
-  <div class="min-h-screen bg-white">
-    <!-- Fixed Header -->
-    <div class="sticky top-0 bg-white z-30 border-b">
-      <!-- Main Header -->
-      <div class="border-b px-8 py-6">
-        <h1 class="text-2xl font-bold text-[#2E4172]">Directory</h1>
-      </div>
-      
-      <!-- A-Z Filters -->
-      <div class="px-8 py-4 bg-white/95 backdrop-blur-sm">
-        <div class="flex gap-2 overflow-x-auto pb-2">
-          <button
-            @click="clearLetterFilter"
-            :class="[
-              'px-3 h-8 rounded-full text-sm font-medium flex-shrink-0',
-              !selectedLetter 
-                ? 'bg-[#2E4172] text-white' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            ]"
-          >
-            All
-          </button>
-          <button 
-            v-for="letter in alphabet" 
-            :key="letter"
-            @click="filterByLetter(letter)"
-            :class="[
-              'w-8 h-8 rounded-full text-sm font-medium flex-shrink-0',
-              selectedLetter === letter 
-                ? 'bg-[#2E4172] text-white' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            ]"
-          >
-            {{ letter }}
-          </button>
-        </div>
-      </div>
-    </div>
-
+  <div class="min-h-screen bg-white flex">
     <!-- Left Sidebar -->
-    <div class="fixed left-0 top-[76px] w-[280px] h-[calc(100vh-76px)] bg-white border-r border-gray-200">
+    <div class="fixed left-0 top-[76px] w-[280px] h-[calc(100vh-76px)] bg-white border-r border-gray-200 overflow-y-auto">
       <div class="h-full flex flex-col">
         <!-- Filter Section -->
         <div v-show="!showEditProfile" class="p-6">
@@ -257,40 +219,80 @@
     </div>
 
     <!-- Main Content Area -->
-    <div class="ml-[280px] pt-[180px] p-8">
-      <!-- Profile Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div 
-          v-for="profile in filteredProfiles" 
-          :key="profile.id"
-          class="bg-white rounded-lg shadow-md p-6 border border-gray-200"
-        >
-          <div class="flex items-start space-x-4">
-            <img 
-              :src="profile.profile_photo_url || 'https://placehold.co/100x100?text=👤'" 
-              :alt="profile.full_name"
-              class="w-16 h-16 rounded-full object-cover flex-shrink-0"
-            />
-            <div class="min-w-0">
-              <h3 class="font-semibold text-lg text-[#2E4172] truncate">{{ profile.full_name }}</h3>
-              <p class="text-gray-600 truncate">{{ profile.title }}</p>
-              <p class="text-gray-500 text-sm truncate">{{ profile.company }}</p>
-            </div>
+    <div class="ml-[280px] flex-1">
+      <!-- Sticky Header -->
+      <div class="sticky top-[76px] bg-white z-30 border-b">
+        <!-- Main Header -->
+        <div class="border-b px-8 py-6">
+          <h1 class="text-2xl font-bold text-[#2E4172]">Directory</h1>
+        </div>
+        
+        <!-- A-Z Filters -->
+        <div class="px-8 py-4 bg-white/95 backdrop-blur-sm">
+          <div class="flex gap-2 overflow-x-auto pb-2">
+            <button
+              @click="clearLetterFilter"
+              :class="[
+                'px-3 h-8 rounded-full text-sm font-medium flex-shrink-0',
+                !selectedLetter 
+                  ? 'bg-[#2E4172] text-white' 
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ]"
+            >
+              All
+            </button>
+            <button 
+              v-for="letter in alphabet" 
+              :key="letter"
+              @click="filterByLetter(letter)"
+              :class="[
+                'w-8 h-8 rounded-full text-sm font-medium flex-shrink-0',
+                selectedLetter === letter 
+                  ? 'bg-[#2E4172] text-white' 
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ]"
+            >
+              {{ letter }}
+            </button>
           </div>
-          
-          <div class="mt-4 space-y-2">
-            <p v-if="profile.email" class="text-sm truncate">
-              <span class="material-icons text-gray-400 text-base align-middle mr-2">email</span>
-              <a :href="'mailto:' + profile.email" class="text-blue-600 hover:underline">{{ profile.email }}</a>
-            </p>
-            <p v-if="profile.phone" class="text-sm truncate">
-              <span class="material-icons text-gray-400 text-base align-middle mr-2">phone</span>
-              {{ profile.phone }}
-            </p>
-            <p v-if="profile.linkedin" class="text-sm truncate">
-              <span class="material-icons text-gray-400 text-base align-middle mr-2">link</span>
-              <a :href="profile.linkedin" target="_blank" class="text-blue-600 hover:underline">LinkedIn Profile</a>
-            </p>
+        </div>
+      </div>
+
+      <!-- Profile Grid -->
+      <div class="p-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div 
+            v-for="profile in filteredProfiles" 
+            :key="profile.id"
+            class="bg-white rounded-lg shadow-md p-6 border border-gray-200"
+          >
+            <div class="flex items-start space-x-4">
+              <img 
+                :src="profile.profile_photo_url || 'https://placehold.co/100x100?text=👤'" 
+                :alt="profile.full_name"
+                class="w-16 h-16 rounded-full object-cover flex-shrink-0"
+              />
+              <div class="min-w-0 flex-1">
+                <h3 class="font-semibold text-lg text-[#2E4172] truncate">{{ profile.full_name }}</h3>
+                <p class="text-gray-600 truncate">{{ profile.title }}</p>
+                <p class="text-gray-500 text-sm truncate">{{ profile.company }}</p>
+              </div>
+            </div>
+            
+            <div class="mt-4 space-y-2">
+              <p v-if="profile.email" class="text-sm truncate">
+                <span class="material-icons text-gray-400 text-base align-middle mr-2">email</span>
+                <a :href="'mailto:' + profile.email" class="text-blue-600 hover:underline">{{ profile.email }}</a>
+              </p>
+              <p v-if="profile.phone" class="text-sm truncate">
+                <span class="material-icons text-gray-400 text-base align-middle mr-2">phone</span>
+                {{ profile.phone }}
+              </p>
+              <p v-if="profile.linkedin" class="text-sm truncate">
+                <span class="material-icons text-gray-400 text-base align-middle mr-2">link</span>
+                <a :href="profile.linkedin" target="_blank" class="text-blue-600 hover:underline">LinkedIn Profile</a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
