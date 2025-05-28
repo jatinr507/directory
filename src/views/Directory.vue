@@ -1,29 +1,19 @@
 <template>
   <div class="min-h-screen bg-white">
     <!-- Fixed Header -->
-    <header class="fixed top-[76px] left-[280px] right-0 bg-white border-b z-10">
-      <div class="px-8 py-6 flex items-center justify-between">
+    <div class="fixed top-[76px] left-[280px] right-0 bg-white z-20">
+      <!-- Main Header -->
+      <div class="border-b px-8 py-6">
         <h1 class="text-2xl font-bold text-[#2E4172]">Directory</h1>
-        
-        <!-- A-Z Filters -->
-        <div class="flex gap-2">
-          <button 
-            v-for="letter in alphabet" 
-            :key="letter"
-            @click="filterByLetter(letter)"
-            :class="[
-              'w-8 h-8 rounded-full text-sm font-medium',
-              selectedLetter === letter 
-                ? 'bg-[#2E4172] text-white' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            ]"
-          >
-            {{ letter }}
-          </button>
+      </div>
+      
+      <!-- A-Z Filters -->
+      <div class="border-b px-8 py-4 bg-white/95 backdrop-blur-sm">
+        <div class="flex gap-2 overflow-x-auto pb-2">
           <button
             @click="clearLetterFilter"
             :class="[
-              'px-3 rounded-full text-sm font-medium',
+              'px-3 h-8 rounded-full text-sm font-medium flex-shrink-0',
               !selectedLetter 
                 ? 'bg-[#2E4172] text-white' 
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -31,9 +21,22 @@
           >
             All
           </button>
+          <button 
+            v-for="letter in alphabet" 
+            :key="letter"
+            @click="filterByLetter(letter)"
+            :class="[
+              'w-8 h-8 rounded-full text-sm font-medium flex-shrink-0',
+              selectedLetter === letter 
+                ? 'bg-[#2E4172] text-white' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            ]"
+          >
+            {{ letter }}
+          </button>
         </div>
       </div>
-    </header>
+    </div>
 
     <!-- Left Sidebar -->
     <div class="fixed left-0 top-[76px] w-[280px] h-[calc(100vh-76px)] bg-white border-r border-gray-200">
@@ -256,7 +259,7 @@
     </div>
 
     <!-- Main Content Area -->
-    <div class="ml-[280px] pt-[132px] p-8">
+    <div class="ml-[280px] pt-[180px] p-8">
       <!-- Profile Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div 
