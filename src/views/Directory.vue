@@ -2,35 +2,45 @@
   <div class="min-h-screen bg-gray-100 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex gap-8">
-        <!-- Left Sidebar Filters -->
-        <div class="w-64 flex-shrink-0">
-          <h2 class="text-[#2E4172] text-xl font-bold mb-6">Filter</h2>
-          
-          <!-- Search Input -->
-          <div class="relative mb-8">
-            <input
-              type="text"
-              v-model="searchQuery"
-              placeholder="Type to Search..."
-              class="w-full pl-4 pr-10 py-2 bg-white border-b border-gray-300 focus:outline-none focus:border-[#2E4172]"
-            />
-            <div class="absolute right-3 top-2.5 text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-              </svg>
+        <!-- Left Sidebar -->
+        <div class="w-64 flex-shrink-0 flex flex-col h-[calc(100vh-8rem)]">
+          <!-- Filter Section -->
+          <div class="bg-[#F8F9FC] rounded-lg p-6">
+            <h2 class="text-[#2E4172] text-xl font-bold mb-4">Filter</h2>
+            
+            <!-- Search Input -->
+            <div class="relative">
+              <input
+                type="text"
+                v-model="searchQuery"
+                placeholder="Type to Search..."
+                class="w-full pl-4 pr-10 py-2 bg-white border-b border-[#2E4172] focus:outline-none"
+              />
+              <div class="absolute right-3 top-2.5 text-[#2E4172]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                </svg>
+              </div>
             </div>
           </div>
 
-          <!-- Edit Profile Link -->
-          <router-link 
-            to="/profile" 
-            class="flex items-center gap-2 text-[#2E4172] hover:text-[#1E2B4A] font-medium"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            Edit Profile
-          </router-link>
+          <!-- Edit Profile Section -->
+          <div class="mt-auto bg-white rounded-lg shadow-sm">
+            <router-link 
+              to="/profile" 
+              class="flex items-center justify-between px-6 py-4 text-[#2E4172] hover:text-[#1E2B4A] font-medium"
+            >
+              <div class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                Edit Profile
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+              </svg>
+            </router-link>
+          </div>
         </div>
 
         <!-- Main Content -->
