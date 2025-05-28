@@ -1,5 +1,40 @@
 <template>
   <div class="min-h-screen bg-white">
+    <!-- Fixed Header -->
+    <header class="fixed top-[76px] left-[280px] right-0 bg-white border-b z-10">
+      <div class="px-8 py-6 flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-[#2E4172]">Directory</h1>
+        
+        <!-- A-Z Filters -->
+        <div class="flex gap-2">
+          <button 
+            v-for="letter in alphabet" 
+            :key="letter"
+            @click="filterByLetter(letter)"
+            :class="[
+              'w-8 h-8 rounded-full text-sm font-medium',
+              selectedLetter === letter 
+                ? 'bg-[#2E4172] text-white' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            ]"
+          >
+            {{ letter }}
+          </button>
+          <button
+            @click="clearLetterFilter"
+            :class="[
+              'px-3 rounded-full text-sm font-medium',
+              !selectedLetter 
+                ? 'bg-[#2E4172] text-white' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            ]"
+          >
+            All
+          </button>
+        </div>
+      </div>
+    </header>
+
     <!-- Left Sidebar -->
     <div class="fixed left-0 top-[76px] w-[280px] h-[calc(100vh-76px)] bg-white border-r border-gray-200">
       <div class="h-full flex flex-col">
@@ -24,7 +59,7 @@
         <!-- Edit Profile Section -->
         <div :class="showEditProfile ? 'h-full' : 'mt-auto'">
           <button 
-            @click="showEditProfile = !showEditProfile"
+            @click="toggleEditProfile"
             class="w-full flex items-center justify-between px-6 py-4 text-[#2E4172] hover:bg-gray-50 border-t"
           >
             <div class="flex items-center gap-2">
@@ -87,7 +122,6 @@
                       v-model="form.phone"
                       type="tel"
                       class="w-full p-2 bg-white border-b border-gray-300 focus:outline-none focus:border-[#2E4172]"
-                      placeholder="Enter"
                     />
                   </div>
 
@@ -97,7 +131,6 @@
                       v-model="form.linkedin"
                       type="url"
                       class="w-full p-2 bg-white border-b border-gray-300 focus:outline-none focus:border-[#2E4172]"
-                      placeholder="Enter"
                     />
                   </div>
 
@@ -107,7 +140,6 @@
                       v-model="form.website"
                       type="url"
                       class="w-full p-2 bg-white border-b border-gray-300 focus:outline-none focus:border-[#2E4172]"
-                      placeholder="Enter"
                     />
                   </div>
                 </div>
@@ -205,7 +237,7 @@
 
               <div class="flex justify-end space-x-4">
                 <button
-                  @click="showEditProfile = false"
+                  @click="toggleEditProfile"
                   class="px-6 py-2 text-[#2E4172] border border-[#2E4172] rounded hover:bg-gray-50"
                 >
                   Cancel
@@ -224,9 +256,7 @@
     </div>
 
     <!-- Main Content Area -->
-    <div class="ml-[280px] p-8">
-      <h1 class="text-2xl font-bold text-[#2E4172] mb-6">Directory</h1>
-      
+    <div class="ml-[280px] pt-[132px] p-8">
       <!-- Profile Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div 
@@ -234,29 +264,29 @@
           :key="profile.id"
           class="bg-white rounded-lg shadow-md p-6 border border-gray-200"
         >
-          <div class="flex items-center space-x-4">
+          <div class="flex items-start space-x-4">
             <img 
               :src="profile.profile_photo_url || 'https://placehold.co/100x100?text=👤'" 
               :alt="profile.full_name"
-              class="w-16 h-16 rounded-full object-cover"
+              class="w-16 h-16 rounded-full object-cover flex-shrink-0"
             />
-            <div>
-              <h3 class="font-semibold text-lg text-[#2E4172]">{{ profile.full_name }}</h3>
-              <p class="text-gray-600">{{ profile.title }}</p>
-              <p class="text-gray-500 text-sm">{{ profile.company }}</p>
+            <div class="min-w-0">
+              <h3 class="font-semibold text-lg text-[#2E4172] truncate">{{ profile.full_name }}</h3>
+              <p class="text-gray-600 truncate">{{ profile.title }}</p>
+              <p class="text-gray-500 text-sm truncate">{{ profile.company }}</p>
             </div>
           </div>
           
           <div class="mt-4 space-y-2">
-            <p v-if="profile.email" class="text-sm">
+            <p v-if="profile.email" class="text-sm truncate">
               <span class="material-icons text-gray-400 text-base align-middle mr-2">email</span>
               <a :href="'mailto:' + profile.email" class="text-blue-600 hover:underline">{{ profile.email }}</a>
             </p>
-            <p v-if="profile.phone" class="text-sm">
+            <p v-if="profile.phone" class="text-sm truncate">
               <span class="material-icons text-gray-400 text-base align-middle mr-2">phone</span>
               {{ profile.phone }}
             </p>
-            <p v-if="profile.linkedin" class="text-sm">
+            <p v-if="profile.linkedin" class="text-sm truncate">
               <span class="material-icons text-gray-400 text-base align-middle mr-2">link</span>
               <a :href="profile.linkedin" target="_blank" class="text-blue-600 hover:underline">LinkedIn Profile</a>
             </p>
@@ -275,6 +305,9 @@ const showEditProfile = ref(false)
 const searchQuery = ref('')
 const profiles = ref([])
 const loading = ref(true)
+const selectedLetter = ref('')
+
+const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 
 const form = ref({
   firstName: '',
@@ -294,16 +327,41 @@ const form = ref({
 })
 
 const filteredProfiles = computed(() => {
-  if (!searchQuery.value) return profiles.value
-  
-  const query = searchQuery.value.toLowerCase()
-  return profiles.value.filter(profile => 
-    profile.full_name?.toLowerCase().includes(query) ||
-    profile.title?.toLowerCase().includes(query) ||
-    profile.company?.toLowerCase().includes(query) ||
-    profile.email?.toLowerCase().includes(query)
-  )
+  let filtered = profiles.value
+
+  if (selectedLetter.value) {
+    filtered = filtered.filter(profile => 
+      profile.full_name?.charAt(0).toUpperCase() === selectedLetter.value
+    )
+  }
+
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase()
+    filtered = filtered.filter(profile => 
+      profile.full_name?.toLowerCase().includes(query) ||
+      profile.title?.toLowerCase().includes(query) ||
+      profile.company?.toLowerCase().includes(query) ||
+      profile.email?.toLowerCase().includes(query)
+    )
+  }
+
+  return filtered
 })
+
+const filterByLetter = (letter) => {
+  selectedLetter.value = letter
+}
+
+const clearLetterFilter = () => {
+  selectedLetter.value = ''
+}
+
+const toggleEditProfile = () => {
+  showEditProfile.value = !showEditProfile.value
+  if (showEditProfile.value) {
+    loadUserProfile()
+  }
+}
 
 const fetchProfiles = async () => {
   const { data, error } = await supabase
@@ -312,7 +370,9 @@ const fetchProfiles = async () => {
     .eq('status', 'approved')
   
   if (!error && data) {
-    profiles.value = data
+    profiles.value = data.sort((a, b) => 
+      a.full_name.localeCompare(b.full_name)
+    )
   }
   loading.value = false
 }
