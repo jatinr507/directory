@@ -1,14 +1,14 @@
 <template>
   <div class="min-h-screen bg-white">
     <!-- Fixed Header -->
-    <div class="fixed top-[76px] left-[280px] right-0 bg-white z-30">
+    <div class="sticky top-0 bg-white z-30 border-b">
       <!-- Main Header -->
       <div class="border-b px-8 py-6">
         <h1 class="text-2xl font-bold text-[#2E4172]">Directory</h1>
       </div>
       
       <!-- A-Z Filters -->
-      <div class="border-b px-8 py-4 bg-white/95 backdrop-blur-sm">
+      <div class="px-8 py-4 bg-white/95 backdrop-blur-sm">
         <div class="flex gap-2 overflow-x-auto pb-2">
           <button
             @click="clearLetterFilter"
@@ -220,15 +220,19 @@
 
                   <div>
                     <label class="block text-gray-700 text-sm mb-1">State</label>
-                    <input
+                    <select
                       v-model="form.state"
-                      type="text"
                       class="w-full p-2 bg-white border-b border-gray-300 focus:outline-none focus:border-[#2E4172]"
-                    />
+                    >
+                      <option value="">Select State</option>
+                      <option value="IL">Illinois</option>
+                      <option value="MI">Michigan</option>
+                      <option value="WI">Wisconsin</option>
+                    </select>
                   </div>
 
                   <div>
-                    <label class="block text-gray-700 text-sm mb-1">ZIP Code</label>
+                    <label class="block text-gray-700 text-sm mb-1">Zip Code</label>
                     <input
                       v-model="form.zipCode"
                       type="text"
@@ -238,16 +242,10 @@
                 </div>
               </div>
 
-              <div class="flex justify-end space-x-4">
+              <div class="flex justify-end pt-4">
                 <button
-                  @click="toggleEditProfile"
-                  class="px-6 py-2 text-[#2E4172] border border-[#2E4172] rounded hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  @click="saveProfile"
-                  class="px-6 py-2 bg-[#2E4172] text-white rounded hover:bg-[#1E2B4A]"
+                  type="submit"
+                  class="px-6 py-2 bg-[#2E4172] text-white rounded hover:bg-[#1E2B4A] transition"
                 >
                   Save Changes
                 </button>
