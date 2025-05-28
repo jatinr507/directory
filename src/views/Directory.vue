@@ -161,4 +161,106 @@
                     <input
                       v-model="form.addressLine1"
                       type="text"
-                      class="w-full p-2 bg-white border-b border-
+                      class="w-full p-2 bg-white border-b border-gray-300 focus:outline-none focus:border-[#2E4172]"
+                      placeholder="Enter"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-gray-700 text-sm mb-1">Company Address Line 2</label>
+                    <input
+                      v-model="form.addressLine2"
+                      type="text"
+                      class="w-full p-2 bg-white border-b border-gray-300 focus:outline-none focus:border-[#2E4172]"
+                      placeholder="Enter"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-gray-700 text-sm mb-1">City</label>
+                    <input
+                      v-model="form.city"
+                      type="text"
+                      class="w-full p-2 bg-white border-b border-gray-300 focus:outline-none focus:border-[#2E4172]"
+                      placeholder="Enter"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-gray-700 text-sm mb-1">State</label>
+                    <input
+                      v-model="form.state"
+                      type="text"
+                      class="w-full p-2 bg-white border-b border-gray-300 focus:outline-none focus:border-[#2E4172]"
+                      placeholder="Enter"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-gray-700 text-sm mb-1">ZIP Code</label>
+                    <input
+                      v-model="form.zipCode"
+                      type="text"
+                      class="w-full p-2 bg-white border-b border-gray-300 focus:outline-none focus:border-[#2E4172]"
+                      placeholder="Enter"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-end space-x-4">
+                <button
+                  @click="showEditProfile = false"
+                  class="px-6 py-2 text-[#2E4172] border border-[#2E4172] rounded hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  @click="saveProfile"
+                  class="px-6 py-2 bg-[#2E4172] text-white rounded hover:bg-[#1E2B4A]"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="ml-[280px] p-8">
+      <h1 class="text-2xl font-bold text-[#2E4172] mb-6">Directory</h1>
+      <!-- Add your directory content here -->
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const showEditProfile = ref(false)
+const searchQuery = ref('')
+
+const form = ref({
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  linkedin: '',
+  website: '',
+  title: '',
+  company: '',
+  organization: '',
+  addressLine1: '',
+  addressLine2: '',
+  city: '',
+  state: '',
+  zipCode: ''
+})
+
+const saveProfile = () => {
+  // Implement save profile logic here
+  showEditProfile.value = false
+}
+</script>
