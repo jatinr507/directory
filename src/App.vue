@@ -1,55 +1,35 @@
 <template>
   <div class="min-h-screen bg-neutral-50 font-sans">
     <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-10">
+    <header class="bg-white border-b border-red-600">
       <div class="max-w-7xl mx-auto px-6 py-4">
         <div class="flex items-center justify-between">
-          <router-link
+          <!-- Logos -->
+          <div class="flex items-center gap-4">
+            <img 
+              src="https://icsps.illinoisstate.edu/wp-content/uploads/2022/12/ICSPS-Logo-1.png" 
+              alt="ICSPS Logo" 
+              class="h-8 object-contain"
+            />
+            <div class="w-px h-8 bg-neutral-200"></div>
+            <img 
+              src="https://www.iccb.org/iccb/wp-content/uploads/2016/01/iccb-logo.png" 
+              alt="ICCB Logo" 
+              class="h-8 object-contain"
+            />
+          </div>
+
+          <!-- Logout Button -->
+          <button 
             v-if="isLoggedIn"
-            to="/directory"
-            class="text-xl font-bold text-primary hover:text-primary-light transition"
-          >ICSPS Network</router-link>
-          <h1 v-else class="text-xl font-bold text-primary">ICSPS Network</h1>
-
-          <nav class="flex items-center gap-8" v-if="!checkingRole">
-            <!-- Not logged in -->
-            <template v-if="!isLoggedIn">
-              <router-link 
-                to="/signup" 
-                class="text-secondary hover:text-secondary-dark transition font-medium"
-                :class="{ 'text-secondary-dark': $route.path === '/signup' }"
-              >Sign Up</router-link>
-              <router-link 
-                to="/login" 
-                class="text-secondary hover:text-secondary-dark transition font-medium"
-                :class="{ 'text-secondary-dark': $route.path === '/login' }"
-              >Login</router-link>
-            </template>
-
-            <!-- Logged in -->
-            <template v-else>
-              <router-link 
-                to="/directory" 
-                class="text-secondary hover:text-secondary-dark transition font-medium"
-                :class="{ 'text-secondary-dark': $route.path === '/directory' }"
-              >Directory</router-link>
-              <router-link 
-                v-if="isAdmin" 
-                to="/admin" 
-                class="text-secondary hover:text-secondary-dark transition font-medium"
-                :class="{ 'text-secondary-dark': $route.path === '/admin' }"
-              >Approvals</router-link>
-              <router-link 
-                to="/profile" 
-                class="text-secondary hover:text-secondary-dark transition font-medium"
-                :class="{ 'text-secondary-dark': $route.path === '/profile' }"
-              >My Profile</router-link>
-              <button 
-                @click="signOut" 
-                class="text-red-600 hover:text-red-700 transition font-medium"
-              >Sign Out</button>
-            </template>
-          </nav>
+            @click="signOut" 
+            class="flex items-center gap-2 px-4 py-2 text-[#2E4172] hover:bg-gray-50 rounded border border-[#2E4172] transition"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
+            </svg>
+            Logout
+          </button>
         </div>
       </div>
     </header>
