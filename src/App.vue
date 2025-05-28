@@ -1,34 +1,60 @@
 <template>
-  <div class="min-h-screen bg-white font-sans">
+  <div class="min-h-screen bg-neutral-50 font-sans">
     <!-- Header -->
-    <header class="bg-white shadow sticky top-0 z-10">
-      <div class="max-w-7xl mx-auto py-4 px-6 flex items-center justify-between">
-        <router-link
-          v-if="isLoggedIn"
-          to="/directory"
-          class="text-xl font-bold text-primary hover:underline"
-        >ICSPS Network</router-link>
-        <h1 v-else class="text-xl font-bold text-primary">ICSPS Network</h1>
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+      <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+          <router-link
+            v-if="isLoggedIn"
+            to="/directory"
+            class="text-xl font-bold text-primary hover:text-primary-light transition"
+          >ICSPS Network</router-link>
+          <h1 v-else class="text-xl font-bold text-primary">ICSPS Network</h1>
 
-        <nav class="flex items-center gap-6 text-blue-600 text-sm font-medium" v-if="!checkingRole">
-          <!-- Not logged in -->
-          <template v-if="!isLoggedIn">
-            <router-link to="/signup" class="hover:underline" :class="{ 'font-bold underline': $route.path === '/signup' }">Sign Up</router-link>
-            <router-link to="/login" class="hover:underline" :class="{ 'font-bold underline': $route.path === '/login' }">Login</router-link>
-          </template>
+          <nav class="flex items-center gap-8" v-if="!checkingRole">
+            <!-- Not logged in -->
+            <template v-if="!isLoggedIn">
+              <router-link 
+                to="/signup" 
+                class="text-secondary hover:text-secondary-dark transition font-medium"
+                :class="{ 'text-secondary-dark': $route.path === '/signup' }"
+              >Sign Up</router-link>
+              <router-link 
+                to="/login" 
+                class="text-secondary hover:text-secondary-dark transition font-medium"
+                :class="{ 'text-secondary-dark': $route.path === '/login' }"
+              >Login</router-link>
+            </template>
 
-          <!-- Logged in -->
-          <template v-else>
-            <router-link to="/directory" class="hover:underline" :class="{ 'font-bold underline': $route.path === '/directory' }">Directory</router-link>
-            <router-link v-if="isAdmin" to="/admin" class="hover:underline" :class="{ 'font-bold underline': $route.path === '/admin' }">Approvals</router-link>
-            <router-link to="/profile" class="hover:underline" :class="{ 'font-bold underline': $route.path === '/profile' }">My Profile</router-link>
-            <button @click="signOut" class="text-red-600 hover:underline ml-auto">Sign Out</button>
-          </template>
-        </nav>
+            <!-- Logged in -->
+            <template v-else>
+              <router-link 
+                to="/directory" 
+                class="text-secondary hover:text-secondary-dark transition font-medium"
+                :class="{ 'text-secondary-dark': $route.path === '/directory' }"
+              >Directory</router-link>
+              <router-link 
+                v-if="isAdmin" 
+                to="/admin" 
+                class="text-secondary hover:text-secondary-dark transition font-medium"
+                :class="{ 'text-secondary-dark': $route.path === '/admin' }"
+              >Approvals</router-link>
+              <router-link 
+                to="/profile" 
+                class="text-secondary hover:text-secondary-dark transition font-medium"
+                :class="{ 'text-secondary-dark': $route.path === '/profile' }"
+              >My Profile</router-link>
+              <button 
+                @click="signOut" 
+                class="text-red-600 hover:text-red-700 transition font-medium"
+              >Sign Out</button>
+            </template>
+          </nav>
+        </div>
       </div>
     </header>
 
-    <main class="max-w-7xl mx-auto p-6">
+    <main class="max-w-7xl mx-auto px-6 py-8">
       <router-view />
     </main>
   </div>
@@ -87,10 +113,12 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 body {
   font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 </style>
